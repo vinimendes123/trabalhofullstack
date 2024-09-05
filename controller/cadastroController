@@ -1,10 +1,18 @@
 const { Pessoa } = require('../models/cadastro.js');
 
-// Criar uma nova pessoa
+
 exports.createPessoa = async (req, res) => {
     try {
         const { Nome, CPF, Telefone } = req.body;
 
+        // Validação do CPF (11 dígitos)
+        if (!/^\d{11}$/.test(CPF)) {
+            return res.status(400).json({ error: 'CPF inválido. Deve conter 11 dígitos.' });
+        }
+
+        if (!/^\d{10,11}$/.test(Telefone)) {
+            return res.status(400).json({ error: 'Telefone inválido. Deve conter 10 ou 11 dígitos.' });
+        }
         const novaPessoa = await Pessoa.create({
             Nome,
             CPF,
@@ -17,7 +25,7 @@ exports.createPessoa = async (req, res) => {
     }
 };
 
-// Obter todas as pessoas
+
 exports.getAllPessoas = async (req, res) => {
     try {
         const pessoas = await Pessoa.findAll();
@@ -27,7 +35,7 @@ exports.getAllPessoas = async (req, res) => {
     }
 };
 
-// Obter uma pessoa por ID
+
 exports.getPessoaById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -43,16 +51,26 @@ exports.getPessoaById = async (req, res) => {
     }
 };
 
-// Atualizar uma pessoa
+
 exports.updatePessoa = async (req, res) => {
     try {
-        const { Id } = req.params;
+        const { id } = req.params;
         const { Nome, CPF, Telefone } = req.body;
 
-        const pessoa = await Pessoa.findByPk(Id);
+        const pessoa = await Pessoa.findByPk(id);
 
         if (!pessoa) {
             return res.status(404).json({ error: 'Pessoa não encontrada' });
+        }
+
+        // Validação do CPF (11 dígitos)
+        if (!/^\d{11}$/.test(CPF)) {
+            return res.status(400).json({ error: 'CPF inválido. Deve conter 11 dígitos.' });
+        }
+
+      
+        if (!/^\d{10,11}$/.test(Telefone)) {
+            return res.status(400).json({ error: 'Telefone inválido. Deve conter 10 ou 11 dígitos.' });
         }
 
         pessoa.Nome = Nome;
@@ -67,12 +85,12 @@ exports.updatePessoa = async (req, res) => {
     }
 };
 
-// Deletar uma pessoa
+
 exports.deletePessoa = async (req, res) => {
     try {
-        const { Id } = req.params;
+        const { id } = req.params;
 
-        const pessoa = await Pessoa.findByPk(Id);
+        const pessoa = await Pessoa.findByPk(id);
 
         if (!pessoa) {
             return res.status(404).json({ error: 'Pessoa não encontrada' });

@@ -1,5 +1,5 @@
 const express = require('express');
-const pessoaController = require('./controller/cadastroController');  // Importe o controlador correto
+const pessoaController = require('./controller/cadastroController');  
 
 const router = express.Router();
 
